@@ -1,0 +1,57 @@
+services:
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    environment:
+      BOT_TOKEN: ${TOKEN}
+      DB_NAME: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      RM_HOST: ${RM_HOST}
+      RM_PORT: ${RM_PORT}
+      RM_USER: ${RM_USER}
+      RM_PASSWORD: ${RM_PASSWORD}
+      DB_REPL_USER: ${DB_REPL_USER}
+    image: 192.168.109.133:5000/bot_image
+    depends_on:
+      - postgres_master
+      - postgres_replica
+
+  postgres_master:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    image: 192.168.109.133:5000/db_image
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      DB_REPL_HOST: ${DB_REPL_HOST}
+      DB_REPL_USER: ${DB_REPL_USER}
+      DB_REPL_PASSWORD: ${DB_REPL_PASSWORD}
+      RM_USER: ${RM_USER}
+      RM_PASSWORD: ${RM_PASSWORD}
+      RM_PORT: ${RM_PORT}
+
+  postgres_replica:
+    build:
+      context: ./db_repl
+      dockerfile: Dockerfile
+    image: 192.168.109.133:5000/db_repl_image
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      DB_REPL_HOST: ${DB_REPL_HOST}
+      DB_REPL_USER: ${DB_REPL_USER}
+      DB_REPL_PASSWORD: ${DB_REPL_PASSWORD}
+      RM_USER: ${RM_USER}
+      RM_PASSWORD: ${RM_PASSWORD}
+      RM_PORT: ${RM_PORT}
+
+
